@@ -1,0 +1,1499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BYC - Quality Management System (QMS)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --charcoal:#1c2024;
+    --charcoal-2:#262b30;
+    --steel:#4a5560;
+    --line:#dcdfe2;
+    --paper:#f6f5f1;
+    --card:#ffffff;
+    --amber:#e08a1e;
+    --amber-dark:#b8690f;
+    --red:#c1462b;
+    --green:#3e7d4f;
+    --text:#1c2024;
+    --muted:#6b7480;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:'Inter',sans-serif;background:var(--paper);color:var(--text);}
+  h1,h2,h3,.eyebrow,.stamp{font-family:'Oswald',sans-serif;}
+
+  header{
+    background:var(--charcoal);
+    color:#fff;
+    padding:18px 20px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    position:sticky;top:0;z-index:20;
+    border-bottom:4px solid var(--amber);
+  }
+  .brand{display:flex;align-items:center;gap:10px;}
+  .brand .mark{
+    width:34px;height:34px;background:var(--amber);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:700;color:var(--charcoal);font-family:'Oswald';
+    transform:rotate(-3deg);
+  }
+  .brand h1{font-size:18px;margin:0;letter-spacing:.5px;text-transform:uppercase;}
+  .brand span{display:block;font-size:11px;color:#b9c0c6;font-family:'Inter';font-weight:400;text-transform:none;letter-spacing:0;}
+  .langs{display:flex;gap:6px;}
+  .langs button{
+    background:transparent;border:1px solid #4a5560;color:#cfd4d8;
+    padding:6px 10px;font-size:12px;border-radius:3px;cursor:pointer;font-weight:600;
+  }
+  .langs button.active{background:var(--amber);border-color:var(--amber);color:var(--charcoal);}
+
+  nav.tabs{
+    display:flex;gap:2px;background:var(--charcoal-2);padding:0 20px;
+    overflow-x:auto;
+  }
+  nav.tabs button{
+    background:transparent;border:none;color:#9aa3ab;padding:12px 16px;
+    font-family:'Oswald';font-size:13px;letter-spacing:.4px;text-transform:uppercase;
+    cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;
+  }
+  nav.tabs button.active{color:#fff;border-bottom-color:var(--amber);}
+
+  main{max-width:1100px;margin:0 auto;padding:20px;}
+  .view{display:none;}
+  .view.active{display:block;}
+
+  .toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:16px;}
+  .toolbar select, .toolbar input[type=text]{
+    padding:8px 10px;border:1px solid var(--line);border-radius:4px;font-size:13px;background:#fff;
+  }
+  .btn{
+    background:var(--charcoal);color:#fff;border:none;padding:10px 16px;border-radius:4px;
+    font-weight:600;font-size:13px;cursor:pointer;letter-spacing:.2px;
+  }
+  .btn.amber{background:var(--amber);color:#1c2024;}
+  .btn.outline{background:transparent;color:var(--charcoal);border:1px solid var(--line);}
+  header .btn.outline{color:#e8eaed;border-color:#4a5560;}
+  header .btn.outline:hover{background:rgba(255,255,255,.08);}
+  .btn:hover{filter:brightness(1.06);}
+  .spacer{flex:1;}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;}
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:6px;overflow:hidden;
+    display:flex;flex-direction:column;
+  }
+  .card .thumb{width:100%;height:150px;background:#eceae4 url('') center/cover;display:flex;align-items:center;justify-content:center;color:#b7b2a5;font-size:12px;}
+  .card .thumb img{width:100%;height:100%;object-fit:cover;}
+  .card-body{padding:12px 14px;display:flex;flex-direction:column;gap:6px;flex:1;}
+  .badge-row{display:flex;gap:6px;flex-wrap:wrap;}
+  .badge{font-size:10px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;padding:3px 7px;border-radius:3px;}
+  .badge.sev-high{background:#fbe4dd;color:var(--red);}
+  .badge.sev-med{background:#fbeedd;color:var(--amber-dark);}
+  .badge.sev-low{background:#e4efe6;color:var(--green);}
+  .badge.status-open{background:#eceae4;color:var(--steel);}
+  .badge.status-progress{background:#fde8cf;color:var(--amber-dark);}
+  .badge.status-resolved{background:#dcefe0;color:var(--green);}
+  .card h3{margin:2px 0 0;font-size:15px;text-transform:none;letter-spacing:0;}
+  .card .meta{font-size:11px;color:var(--muted);}
+  .card .desc{font-size:12.5px;color:#3a4249;line-height:1.4;flex:1;}
+  .card-actions{display:flex;gap:6px;padding:10px 14px;border-top:1px solid var(--line);}
+  .card-actions button{flex:1;font-size:12px;padding:7px;border-radius:4px;border:1px solid var(--line);background:#fff;cursor:pointer;}
+  .card-actions button.primary{background:var(--charcoal);color:#fff;border-color:var(--charcoal);}
+
+  .empty{padding:60px 20px;text-align:center;color:var(--muted);}
+  .empty .mark{font-size:40px;margin-bottom:10px;}
+
+  /* Modal */
+  .overlay{
+    position:fixed;inset:0;background:rgba(20,22,24,.55);display:none;
+    align-items:flex-start;justify-content:center;padding:24px 12px;overflow-y:auto;z-index:50;
+  }
+  .overlay.active{display:flex;}
+  .modal{
+    background:#fff;border-radius:8px;max-width:560px;width:100%;padding:22px;margin-top:20px;
+  }
+  .modal h2{margin-top:0;font-size:18px;text-transform:uppercase;letter-spacing:.4px;}
+  .field{margin-bottom:12px;}
+  .field label{display:block;font-size:12px;font-weight:600;color:var(--steel);margin-bottom:4px;text-transform:uppercase;letter-spacing:.3px;}
+  .field input[type=text], .field textarea, .field select{
+    width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:4px;font-size:14px;font-family:inherit;
+  }
+  .field textarea{min-height:70px;resize:vertical;}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px;}
+  .imgpreview{max-width:100%;max-height:160px;border-radius:4px;margin-top:6px;display:none;}
+  .photo-slots{display:flex;gap:10px;}
+  .photo-slot{flex:1;position:relative;border:1px dashed var(--line);border-radius:6px;padding:8px;background:#fbfaf8;}
+  .photo-slot input[type=file]{font-size:11px;width:100%;}
+  .removePhoto{
+    position:absolute;top:4px;right:4px;width:20px;height:20px;border-radius:50%;
+    border:1px solid var(--line);background:#fff;color:var(--red);cursor:pointer;
+    font-size:12px;line-height:1;display:none;padding:0;
+  }
+  .comment{background:var(--paper);border-radius:4px;padding:7px 9px;font-size:12px;margin-bottom:6px;}
+  .comment .who{font-weight:600;font-size:10px;color:var(--muted);}
+  .comment .txt{font-size:12px;line-height:1.4;}
+  .translations{margin-top:6px;padding:6px 8px;border:1px dashed var(--line);border-radius:4px;background:var(--paper);}
+  .translations div{font-size:10.5px;color:var(--muted);line-height:1.4;margin-bottom:2px;}
+  .translations b{color:var(--steel);font-weight:600;}
+  .comment .translations{margin-top:5px;border:none;border-top:1px dashed var(--line);border-radius:0;padding:5px 0 0;background:none;}
+  .trans-row{display:flex;align-items:flex-start;gap:6px;margin-bottom:4px;}
+  .trans-row label{flex:0 0 auto;font-size:10px;font-weight:700;color:var(--steel);padding-top:4px;width:20px;}
+  .trans-row textarea.trans-input{
+    flex:1;font-size:11px;font-family:inherit;color:var(--text);border:1px solid var(--line);
+    border-radius:3px;padding:4px 6px;resize:vertical;min-height:28px;background:#fff;
+  }
+  .translateBtn{
+    margin-top:5px;background:none;border:none;color:var(--amber-dark);
+    font-size:10.5px;font-weight:600;cursor:pointer;padding:0;text-decoration:underline;
+  }
+  .translateBtn:disabled{color:var(--muted);cursor:default;text-decoration:none;}
+  .gallery{display:flex;gap:6px;flex-wrap:wrap;min-height:24px;}
+  .gallery img{width:120px;height:120px;object-fit:cover;border-radius:4px;}
+  .gallery .none{font-size:12px;color:var(--muted);}
+
+  /* Notification / print */
+  .notice-list{list-style:none;padding:0;margin:0 0 16px;}
+  .notice-list li{display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid var(--line);border-radius:4px;margin-bottom:6px;background:#fff;}
+  .notice-list li img{width:44px;height:44px;object-fit:cover;border-radius:3px;}
+  .notice-sheet{background:#fff;border:1px solid var(--line);padding:28px;border-radius:6px;}
+  .notice-sheet .stamp{color:var(--amber-dark);font-weight:700;letter-spacing:1px;font-size:12px;text-transform:uppercase;}
+  .notice-sheet h2{margin:4px 0 2px;font-size:22px;}
+  .notice-item{border-top:1px solid var(--line);padding:14px 0;display:flex;gap:14px;}
+  .notice-item img{width:90px;height:90px;object-fit:cover;border-radius:4px;flex-shrink:0;}
+  .notice-item .txt{font-size:13px;line-height:1.5;}
+  .notice-item .txt b{display:block;font-size:14px;margin-bottom:2px;}
+
+  footer{text-align:center;color:var(--muted);font-size:11px;padding:24px;}
+
+  #singlePrintSheet{display:none;}
+  #singlePrintSheet .sheet-inner{padding:10mm 14mm;}
+  #singlePrintSheet .head-row{display:flex;align-items:center;gap:10px;border-bottom:4px solid var(--amber);padding-bottom:10px;margin-bottom:16px;}
+  #singlePrintSheet .head-row .mark{width:34px;height:34px;background:var(--amber);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--charcoal);font-family:'Oswald',sans-serif;font-size:14px;flex-shrink:0;}
+  #singlePrintSheet .head-row .mark.byc-mark{background:var(--charcoal);color:#fff;width:auto;padding:0 8px;font-size:12px;letter-spacing:.5px;}
+  #singlePrintSheet .stamp{color:var(--amber-dark);font-weight:700;letter-spacing:.6px;font-size:12px;text-transform:uppercase;font-family:'Oswald',sans-serif;white-space:nowrap;overflow:hidden;}
+  #singlePrintSheet h2{font-family:'Oswald',sans-serif;font-size:30px;margin:0 0 8px;line-height:1.15;}
+  #singlePrintSheet .meta-line{font-size:14px;color:var(--muted);margin-bottom:12px;}
+  #singlePrintSheet .badge-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;}
+  #singlePrintSheet .badge{font-size:13px;padding:6px 12px;}
+  #singlePrintSheet .sec-label{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin:18px 0 6px;}
+  #singlePrintSheet .sec-label:first-child{margin-top:0;}
+  #singlePrintSheet .sec-text{font-size:17px;line-height:1.6;}
+  #singlePrintSheet .sec-text.lang-tag{margin-top:4px;font-style:italic;}
+  #singlePrintSheet .content-row{display:flex;gap:18mm;align-items:flex-start;}
+  #singlePrintSheet .sheet-left{flex:1.15;min-width:0;}
+  #singlePrintSheet .sheet-right{flex:1;min-width:0;display:flex;flex-direction:column;gap:8mm;}
+  #singlePrintSheet .gallery{display:flex;gap:8mm;}
+  #singlePrintSheet .gallery img{flex:1;width:100%;height:78mm;object-fit:cover;border-radius:6px;border:1px solid var(--line);}
+  #singlePrintSheet .sign-block{display:flex;gap:18mm;margin-top:20mm;padding-top:14px;border-top:1px solid var(--line);}
+  #singlePrintSheet .sign-col{flex:1;font-size:12px;color:var(--muted);}
+  #singlePrintSheet .sign-line{border-bottom:1px solid var(--steel);height:38px;margin-bottom:5px;}
+  #singlePrintSheet .print-comments{margin-top:2px;}
+  #singlePrintSheet .print-comment{background:var(--paper);border-radius:6px;padding:9px 12px;margin-bottom:8px;border:1px solid var(--line);}
+  #singlePrintSheet .pc-meta{font-size:12px;color:var(--muted);margin-bottom:4px;}
+  #singlePrintSheet .pc-text{font-size:16px;line-height:1.5;margin-bottom:5px;}
+  #singlePrintSheet .pc-trans{font-size:14px;color:var(--steel);line-height:1.5;}
+  #singlePrintSheet .pc-trans b{color:var(--charcoal);}
+
+  body.print-single main{display:none !important;}
+  body.print-single header, body.print-single nav.tabs, body.print-single footer{display:none !important;}
+  body.print-single .overlay{display:none !important;}
+  body.print-single #singlePrintSheet{display:block !important;}
+
+  @media print{
+    .overlay{display:none !important;}
+    header, nav.tabs, .toolbar, footer, .no-print{display:none !important;}
+    body{background:#fff;}
+    main{padding:0;max-width:100%;}
+    .view{display:none !important;}
+    .view.print-target{display:block !important;}
+    .notice-sheet{border:none;padding:0;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="mark">QC</div>
+    <div>
+      <h1 data-i18n="appTitle">BYC - Quality Management System (QMS)</h1>
+      <span data-i18n="appSub">Report · Discuss · Improve</span>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <span id="syncStatus" style="font-size:11px;color:#9aa3ab;"></span>
+    <button id="syncNowBtn" class="btn outline" style="padding:6px 10px;font-size:12px;display:none;">🔄 Sync</button>
+    <button id="settingsBtn" class="btn outline" style="padding:6px 10px;font-size:12px;">⚙ GitHub Sync</button>
+  </div>
+</header>
+
+<div style="background:#fdf3e3;border-bottom:1px solid #e8c98a;padding:8px 20px;font-size:12px;color:#6b4d0f;line-height:1.5;">
+  <b>Pilot QMS model</b> — used to record quality issues and their handling procedures, for future reference when training new QC staff, improving product quality, and continuous improvement. Currently still being developed before official rollout.
+</div>
+
+<nav class="tabs">
+  <button class="tab-btn active" data-view="board" data-i18n="tabBoard">Issue Board</button>
+  <button class="tab-btn" data-view="notice" data-i18n="tabNotice">Notification</button>
+</nav>
+
+
+<main>
+
+  <!-- BOARD VIEW -->
+  <section class="view active" id="view-board">
+    <div class="toolbar no-print">
+      <select id="filterStatus">
+        <option value="" data-i18n="allStatus">All statuses</option>
+        <option value="open" data-i18n="statusOpen">Open</option>
+        <option value="progress" data-i18n="statusProgress">In progress</option>
+        <option value="resolved" data-i18n="statusResolved">Resolved</option>
+      </select>
+      <select id="filterDept">
+        <option value="" data-i18n="allDept">All departments</option>
+      </select>
+      <input type="text" id="searchBox" data-i18n-ph="searchPh" placeholder="Search...">
+      <div class="spacer"></div>
+      <button class="btn outline" id="exportBtn" data-i18n="exportBtn">Export JSON</button>
+      <button class="btn outline" id="importBtn" data-i18n="importBtn">Import JSON</button>
+      <input type="file" id="importFile" accept=".json" style="display:none">
+      <button class="btn amber" id="newIssueBtn" data-i18n="newIssueBtn">+ New Issue</button>
+    </div>
+    <div class="grid" id="issueGrid"></div>
+    <div class="empty" id="emptyState" style="display:none">
+      <div class="mark">🗂️</div>
+      <div data-i18n="emptyMsg">No issues yet. Click "New Issue" to report the first one.</div>
+    </div>
+  </section>
+
+  <!-- NOTIFICATION VIEW -->
+  <section class="view" id="view-notice">
+    <div class="toolbar no-print">
+      <div data-i18n="noticeHint" style="font-size:13px;color:var(--muted)">Select issues below to include in the printable notice.</div>
+      <div class="spacer"></div>
+      <button class="btn" id="printBtn" data-i18n="printBtn">🖨 Print / Save as PDF</button>
+    </div>
+    <ul class="notice-list no-print" id="noticeSelectList"></ul>
+
+    <div class="notice-sheet" id="noticeSheet">
+      <div class="stamp" data-i18n="noticeStamp">Quality Notice</div>
+      <h2 data-i18n="noticeTitle">Quality Issue Notification</h2>
+      <div style="font-size:12px;color:var(--muted)" id="noticeDate"></div>
+      <div id="noticeBody"></div>
+    </div>
+  </section>
+
+</main>
+
+<footer>Quality Issue Board — local data stored in this browser</footer>
+
+<!-- New/Edit Issue Modal -->
+<div class="overlay" id="issueOverlay">
+  <div class="modal">
+    <h2 data-i18n="modalTitle">Report Quality Issue</h2>
+    <div class="field">
+      <label data-i18n="fTitle">Issue title</label>
+      <input type="text" id="fTitle">
+    </div>
+    <div class="field">
+      <label>Label # <span style="font-weight:400;color:var(--muted);text-transform:none">(used in PDF filename, e.g. E10)</span></label>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <input type="text" id="fLabel" placeholder="e.g. E10" style="flex:1;">
+        <label style="display:flex;align-items:center;gap:5px;font-size:12px;font-weight:600;color:var(--steel);white-space:nowrap;text-transform:none;">
+          <input type="checkbox" id="fLabelNA" style="width:auto;"> N/A
+        </label>
+      </div>
+    </div>
+    <div class="field">
+      <label data-i18n="fPhoto">Issue photos (before) — up to 2</label>
+      <div class="photo-slots">
+        <div class="photo-slot">
+          <input type="file" accept="image/*" id="fPhoto1">
+          <img class="imgpreview" id="fPhoto1Preview">
+          <button type="button" class="removePhoto" data-group="issue" data-idx="0">×</button>
+        </div>
+        <div class="photo-slot">
+          <input type="file" accept="image/*" id="fPhoto2">
+          <img class="imgpreview" id="fPhoto2Preview">
+          <button type="button" class="removePhoto" data-group="issue" data-idx="1">×</button>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <label data-i18n="fImprovePhoto">Improvement photos (after) — up to 2</label>
+      <div class="photo-slots">
+        <div class="photo-slot">
+          <input type="file" accept="image/*" id="fImprovePhoto1">
+          <img class="imgpreview" id="fImprovePhoto1Preview">
+          <button type="button" class="removePhoto" data-group="improve" data-idx="0">×</button>
+        </div>
+        <div class="photo-slot">
+          <input type="file" accept="image/*" id="fImprovePhoto2">
+          <img class="imgpreview" id="fImprovePhoto2Preview">
+          <button type="button" class="removePhoto" data-group="improve" data-idx="1">×</button>
+        </div>
+      </div>
+    </div>
+    <div class="row2">
+      <div class="field">
+        <label data-i18n="fDept">Department</label>
+        <input type="text" id="fDept" data-i18n-ph="fDeptPh" placeholder="e.g. Sanding / Assembly">
+      </div>
+      <div class="field">
+        <label data-i18n="fSeverity">Severity</label>
+        <select id="fSeverity">
+          <option value="low" data-i18n="sevLow">Low</option>
+          <option value="med" data-i18n="sevMed" selected>Medium</option>
+          <option value="high" data-i18n="sevHigh">High</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label data-i18n="fDesc">Description of the problem</label>
+      <textarea id="fDesc"></textarea>
+      <button type="button" class="translateBtn" id="translateDescBtn">Translate to VI / ZH</button>
+      <div class="translations" id="descTranslationBox" style="display:none"></div>
+    </div>
+    <div class="field">
+      <label data-i18n="fImprove">Improvement / corrective action</label>
+      <textarea id="fImprove"></textarea>
+      <button type="button" class="translateBtn" id="translateImproveBtn">Translate to VI / ZH</button>
+      <div class="translations" id="improveTranslationBox" style="display:none"></div>
+    </div>
+    <div class="row2">
+      <div class="field">
+        <label data-i18n="fReporter">Reported by</label>
+        <input type="text" id="fReporter">
+      </div>
+      <div class="field">
+        <label data-i18n="fStatus">Status</label>
+        <select id="fStatus">
+          <option value="open" data-i18n="statusOpen">Open</option>
+          <option value="progress" data-i18n="statusProgress">In progress</option>
+          <option value="resolved" data-i18n="statusResolved">Resolved</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn outline" id="cancelModal" data-i18n="cancelBtn">Cancel</button>
+      <button class="btn amber" id="saveIssue" data-i18n="saveBtn">Save Issue</button>
+    </div>
+  </div>
+</div>
+
+<!-- Detail / Comments Modal -->
+<div class="overlay" id="detailOverlay">
+  <div class="modal">
+    <h2 id="detailTitle"></h2>
+    <div class="row2" id="detailPhotoRow">
+      <div>
+        <label style="display:block;font-size:11px;color:var(--muted);font-weight:600;margin-bottom:3px" data-i18n="beforeLabel">Before</label>
+        <div class="gallery" id="detailBeforeGallery"></div>
+      </div>
+      <div>
+        <label style="display:block;font-size:11px;color:var(--muted);font-weight:600;margin-bottom:3px" data-i18n="afterLabel">After</label>
+        <div class="gallery" id="detailAfterGallery"></div>
+      </div>
+    </div>
+    <div class="badge-row" id="detailBadges" style="margin:10px 0"></div>
+    <p style="font-size:13px" id="detailDesc"></p>
+    <p style="font-size:13px"><b data-i18n="fImprove">Improvement / corrective action</b><br><span id="detailImprove"></span></p>
+    <div id="detailComments" style="margin:10px 0"></div>
+    <div class="field">
+      <label data-i18n="fComment">Add comment</label>
+      <textarea id="fNewComment"></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn outline" id="deleteIssue" data-i18n="deleteBtn" style="margin-right:auto;color:var(--red);border-color:var(--red)">Delete</button>
+      <select id="printScaleSelect" title="Print scale — reduce if content spills onto page 2" style="padding:8px 6px;border:1px solid var(--line);border-radius:4px;font-size:12px;">
+        <option value="100" selected>Scale: 100%</option>
+        <option value="90">Scale: 90%</option>
+        <option value="80">Scale: 80%</option>
+        <option value="70">Scale: 70%</option>
+      </select>
+      <button class="btn outline" id="printDetailBtn" title="Print A4 Landscape">🖨 Print A4</button>
+      <button class="btn outline" id="editIssue" data-i18n="editBtn">Edit</button>
+      <button class="btn outline" id="closeDetail" data-i18n="closeBtn">Close</button>
+      <button class="btn amber" id="addComment" data-i18n="addCommentBtn">Add Comment</button>
+    </div>
+  </div>
+</div>
+
+<!-- Backend Sync Settings -->
+<div class="overlay" id="settingsOverlay">
+  <div class="modal" style="max-width:480px">
+    <h2>⚙ GitHub Sync</h2>
+    <p style="font-size:13px;color:#3a4249;line-height:1.5">
+      This app already points to a default shared GitHub repo — just opening
+      it and refreshing shows everyone the latest data, no setup needed for
+      viewing. Only fill in a token below if <b>you</b> need to add or edit
+      issues from this device.
+    </p>
+    <div class="field">
+      <label>Repository (owner/repo) <span style="font-weight:400;color:var(--muted);text-transform:none">— leave blank to use the built-in default</span></label>
+      <input type="text" id="ghRepoInput" placeholder="haibui1053/quality-issue-board">
+    </div>
+    <div class="field">
+      <label>Personal Access Token</label>
+      <input type="password" id="ghTokenInput" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+    </div>
+    <div class="row2">
+      <div class="field">
+        <label>Data file path</label>
+        <input type="text" id="ghPathInput" placeholder="qc-data.json">
+      </div>
+      <div class="field">
+        <label>Branch</label>
+        <input type="text" id="ghBranchInput" placeholder="main">
+      </div>
+    </div>
+    <p style="font-size:12px;color:var(--muted)">
+      <b>Only viewing?</b> Leave the token empty — for a public repo, anyone can
+      read the shared data with just the repo name, no token needed.<br><br>
+      <b>Need to add/edit issues?</b> Create a <b>fine-grained token</b>
+      (github.com → Settings → Developer settings → Fine-grained tokens)
+      scoped to <b>only this one repo</b> with "Contents: Read and write"
+      permission — not a token with full account access. The token is stored
+      only in this browser's local storage and is never uploaded anywhere
+      except to GitHub's own API. Don't share your token — if your boss also
+      needs to add/edit issues, they should create their own token.
+    </p>
+    <div class="modal-actions">
+      <button class="btn outline" id="settingsCancelBtn">Cancel</button>
+      <button class="btn outline" id="settingsClearBtn" style="color:var(--red);border-color:var(--red)">Disconnect</button>
+      <button class="btn amber" id="settingsSaveBtn">Save & Sync</button>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm Dialog -->
+<div class="overlay" id="confirmOverlay">
+  <div class="modal" style="max-width:360px">
+    <h2 data-i18n="confirmTitle">Please confirm</h2>
+    <p id="confirmMsg" style="font-size:14px;color:#3a4249"></p>
+    <div class="modal-actions">
+      <button class="btn outline" id="confirmCancelBtn" data-i18n="cancelBtn">Cancel</button>
+      <button class="btn" id="confirmOkBtn" style="background:var(--red)" data-i18n="deleteBtn">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- Hidden sheet used to print a single issue at A5 size -->
+<div id="singlePrintSheet"></div>
+
+<script>
+/* ---------- custom confirm dialog ---------- */
+const confirmOverlay = document.getElementById('confirmOverlay');
+let confirmCallback = null;
+
+function showConfirm(message, onConfirm){
+  document.getElementById('confirmMsg').textContent = message;
+  confirmCallback = onConfirm;
+  confirmOverlay.classList.add('active');
+}
+document.getElementById('confirmCancelBtn').addEventListener('click',()=>{
+  confirmOverlay.classList.remove('active');
+  confirmCallback = null;
+});
+document.getElementById('confirmOkBtn').addEventListener('click',()=>{
+  const cb = confirmCallback;
+  confirmOverlay.classList.remove('active');
+  confirmCallback = null;
+  if(cb) cb();
+});
+
+/* ---------- i18n ---------- */
+const I18N = {
+  en: {
+    appTitle:"BYC - Quality Management System (QMS)", appSub:"Pilot Model · Report · Discuss · Improve",
+    tabBoard:"Issue Board", tabNotice:"Notification",
+    allStatus:"All statuses", statusOpen:"Open", statusProgress:"In progress", statusResolved:"Resolved",
+    allDept:"All departments", searchPh:"Search...",
+    exportBtn:"Export JSON", importBtn:"Import JSON", newIssueBtn:"+ New Issue",
+    emptyMsg:'No issues yet. Click "New Issue" to report the first one.',
+    noticeHint:"Select issues below to include in the printable notice.",
+    printBtn:"🖨 Print / Save as PDF", noticeStamp:"Quality Notice", noticeTitle:"Quality Issue Notification",
+    modalTitle:"Report Quality Issue", fTitle:"Issue title", fPhoto:"Issue photo (before)",
+    fImprovePhoto:"Improvement photo (after)", beforeLabel:"Before / Trước / 之前", afterLabel:"After / Sau / 之后",
+    fDept:"Department", fDeptPh:"e.g. Sanding / Assembly", fSeverity:"Severity",
+    sevLow:"Low", sevMed:"Medium", sevHigh:"High",
+    fDesc:"Description of the problem / Mô tả vấn đề / 问题描述", fImprove:"Improvement / corrective action / Cải thiện, hành động khắc phục / 改善 / 纠正措施",
+    fReporter:"Reported by", fStatus:"Status",
+    cancelBtn:"Cancel", saveBtn:"Save Issue",
+    fComment:"Add comment", deleteBtn:"Delete", closeBtn:"Close", addCommentBtn:"Add Comment",
+    reportedBy:"Reported by", on:"on", noComments:"No comments yet.",
+    confirmDelete:"Delete this issue? This cannot be undone.",
+    storageFull:"Browser storage is full. This issue is shown now but may not be saved after you close the page. Try smaller photos, or use Export JSON to back up your data.",
+    titleRequired:"Please enter an issue title.", editBtn:"Edit", confirmTitle:"Please confirm"
+  },
+  vi: {
+    appTitle:"Bảng Vấn Đề Chất Lượng", appSub:"Báo cáo · Trao đổi · Cải thiện",
+    tabBoard:"Danh sách vấn đề", tabNotice:"Thông báo",
+    allStatus:"Tất cả trạng thái", statusOpen:"Mở", statusProgress:"Đang xử lý", statusResolved:"Đã xử lý",
+    allDept:"Tất cả bộ phận", searchPh:"Tìm kiếm...",
+    exportBtn:"Xuất JSON", importBtn:"Nhập JSON", newIssueBtn:"+ Vấn đề mới",
+    emptyMsg:'Chưa có vấn đề nào. Bấm "Vấn đề mới" để báo cáo.',
+    noticeHint:"Chọn các vấn đề bên dưới để đưa vào thông báo có thể in.",
+    printBtn:"🖨 In / Lưu PDF", noticeStamp:"Thông Báo Chất Lượng", noticeTitle:"Thông Báo Vấn Đề Chất Lượng",
+    modalTitle:"Báo Cáo Vấn Đề Chất Lượng", fTitle:"Tiêu đề vấn đề", fPhoto:"Hình ảnh vấn đề (trước)",
+    fImprovePhoto:"Hình ảnh cải thiện (sau)", beforeLabel:"Trước", afterLabel:"Sau",
+    fDept:"Bộ phận", fDeptPh:"VD: Chà nhám / Lắp ráp", fSeverity:"Mức độ",
+    sevLow:"Thấp", sevMed:"Trung bình", sevHigh:"Cao",
+    fDesc:"Mô tả vấn đề", fImprove:"Cải thiện / hành động khắc phục",
+    fReporter:"Người báo cáo", fStatus:"Trạng thái",
+    cancelBtn:"Hủy", saveBtn:"Lưu vấn đề",
+    fComment:"Thêm bình luận", deleteBtn:"Xóa", closeBtn:"Đóng", addCommentBtn:"Thêm bình luận",
+    reportedBy:"Người báo cáo", on:"lúc", noComments:"Chưa có bình luận.",
+    confirmDelete:"Xóa vấn đề này? Không thể hoàn tác.",
+    storageFull:"Bộ nhớ trình duyệt đã đầy. Vấn đề vẫn hiển thị ngay bây giờ nhưng có thể không được lưu sau khi anh đóng trang. Hãy dùng ảnh nhỏ hơn, hoặc bấm Export JSON để sao lưu dữ liệu.",
+    titleRequired:"Vui lòng nhập tiêu đề vấn đề.", editBtn:"Sửa"
+  },
+  zh: {
+    appTitle:"质量问题看板", appSub:"报告 · 讨论 · 改善",
+    tabBoard:"问题列表", tabNotice:"通知",
+    allStatus:"所有状态", statusOpen:"待处理", statusProgress:"处理中", statusResolved:"已解决",
+    allDept:"所有部门", searchPh:"搜索...",
+    exportBtn:"导出 JSON", importBtn:"导入 JSON", newIssueBtn:"+ 新增问题",
+    emptyMsg:"暂无问题，点击“新增问题”开始报告。",
+    noticeHint:"选择下方问题以生成可打印通知。",
+    printBtn:"🖨 打印 / 保存为 PDF", noticeStamp:"质量通知", noticeTitle:"质量问题通知",
+    modalTitle:"报告质量问题", fTitle:"问题标题", fPhoto:"问题照片（之前）",
+    fImprovePhoto:"改善照片（之后）", beforeLabel:"之前", afterLabel:"之后",
+    fDept:"部门", fDeptPh:"例如：砂光 / 组装", fSeverity:"严重程度",
+    sevLow:"低", sevMed:"中", sevHigh:"高",
+    fDesc:"问题描述", fImprove:"改善 / 纠正措施",
+    fReporter:"报告人", fStatus:"状态",
+    cancelBtn:"取消", saveBtn:"保存问题",
+    fComment:"添加评论", deleteBtn:"删除", closeBtn:"关闭", addCommentBtn:"添加评论",
+    reportedBy:"报告人", on:"于", noComments:"暂无评论。",
+    confirmDelete:"删除此问题？此操作无法撤销。",
+    storageFull:"浏览器存储空间已满。此问题现在会显示，但关闭页面后可能不会被保存。请使用更小的照片，或点击“导出 JSON”备份数据。",
+    titleRequired:"请输入问题标题。", editBtn:"编辑"
+  }
+};
+let lang = 'en';
+
+function applyI18n(){
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const k = el.getAttribute('data-i18n');
+    if(I18N[lang][k]) el.textContent = I18N[lang][k];
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{
+    const k = el.getAttribute('data-i18n-ph');
+    if(I18N[lang][k]) el.placeholder = I18N[lang][k];
+  });
+  renderGrid();
+  renderNoticeList();
+}
+
+document.querySelectorAll('.langs button').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('.langs button').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    lang = b.dataset.lang;
+    applyI18n();
+  });
+});
+
+/* ---------- tabs ---------- */
+document.querySelectorAll('.tab-btn').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.view').forEach(x=>x.classList.remove('active','print-target'));
+    b.classList.add('active');
+    const v = document.getElementById('view-'+b.dataset.view);
+    v.classList.add('active');
+    if(b.dataset.view==='notice') v.classList.add('print-target');
+  });
+});
+
+/* ---------- data ---------- */
+/* ---------- storage (IndexedDB — much larger quota than localStorage) ---------- */
+const DB_NAME = 'qc_board_db';
+const STORE_NAME = 'kv';
+
+function idbOpen(){
+  return new Promise((resolve,reject)=>{
+    if(!window.indexedDB){ reject(new Error('IndexedDB not supported')); return; }
+    const req = indexedDB.open(DB_NAME, 1);
+    req.onupgradeneeded = ()=>{ req.result.createObjectStore(STORE_NAME); };
+    req.onsuccess = ()=>resolve(req.result);
+    req.onerror = ()=>reject(req.error);
+  });
+}
+async function idbGet(key){
+  const db = await idbOpen();
+  return new Promise((resolve,reject)=>{
+    const tx = db.transaction(STORE_NAME,'readonly');
+    const req = tx.objectStore(STORE_NAME).get(key);
+    req.onsuccess = ()=>resolve(req.result);
+    req.onerror = ()=>reject(req.error);
+  });
+}
+async function idbSet(key,val){
+  const db = await idbOpen();
+  return new Promise((resolve,reject)=>{
+    const tx = db.transaction(STORE_NAME,'readwrite');
+    tx.objectStore(STORE_NAME).put(val, key);
+    tx.oncomplete = ()=>resolve();
+    tx.onerror = ()=>reject(tx.error);
+  });
+}
+
+let issues = [];
+let dbReady = false;
+
+/* ---------- backend sync (GitHub repo as shared data store) ---------- */
+// ⚠️ EDIT THIS AFTER YOU CREATE YOUR GITHUB REPO ⚠️
+// Replace the repo value below with your real "username/repo-name".
+// Once set here, VIEWERS (e.g. your boss) need to do NOTHING — opening the
+// GitHub Pages link and refreshing is enough to see the latest shared data.
+// Only people who need to ADD/EDIT issues still enter a token via "⚙ GitHub Sync".
+const DEFAULT_GITHUB_REPO = 'haibui1053/BYC-QUALITY-MANAGERMENT-SYSTEM-2026';
+const DEFAULT_GITHUB_PATH = 'qc-data.json';
+const DEFAULT_GITHUB_BRANCH = 'main';
+
+function getGithubConfig(){
+  return {
+    token: localStorage.getItem('qc_gh_token') || '',
+    repo: localStorage.getItem('qc_gh_repo') || DEFAULT_GITHUB_REPO,
+    path: localStorage.getItem('qc_gh_path') || DEFAULT_GITHUB_PATH,
+    branch: localStorage.getItem('qc_gh_branch') || DEFAULT_GITHUB_BRANCH
+  };
+}
+function setGithubConfig(cfg){
+  localStorage.setItem('qc_gh_token', cfg.token || '');
+  localStorage.setItem('qc_gh_repo', cfg.repo || '');
+  localStorage.setItem('qc_gh_path', cfg.path || 'qc-data.json');
+  localStorage.setItem('qc_gh_branch', cfg.branch || 'main');
+}
+function githubHasRepo(){
+  const repo = getGithubConfig().repo;
+  return !!(repo && repo !== 'YOUR_USERNAME/YOUR_REPO_NAME');
+}
+function githubCanWrite(){
+  return !!(getGithubConfig().token && githubHasRepo());
+}
+
+function setSyncStatus(text){
+  const el = document.getElementById('syncStatus');
+  if(el) el.textContent = text;
+}
+
+// UTF-8 safe base64 helpers (GitHub's API stores file content as base64;
+// plain btoa/atob mangle non-ASCII text like Vietnamese/Chinese characters).
+function utf8ToBase64(str){ return btoa(unescape(encodeURIComponent(str))); }
+function base64ToUtf8(b64){ return decodeURIComponent(escape(atob(b64))); }
+
+// Fetches the current data file from GitHub. Returns { content, sha } where
+// content is the parsed JSON array (or null if the file doesn't exist yet).
+// Works without a token for public repos (read-only viewers, e.g. your boss,
+// don't need to create a Personal Access Token at all).
+async function githubGetFile(){
+  const c = getGithubConfig();
+  const url = `https://api.github.com/repos/${c.repo}/contents/${encodeURIComponent(c.path)}?ref=${encodeURIComponent(c.branch)}`;
+  const headers = { 'Accept': 'application/vnd.github+json' };
+  if(c.token) headers['Authorization'] = `token ${c.token}`;
+  const res = await fetch(url, { headers });
+  if(res.status === 404) return { content: null, sha: null };
+  if(!res.ok) throw new Error('GitHub GET failed: ' + res.status);
+  const data = await res.json();
+  const decoded = base64ToUtf8(data.content.replace(/\n/g,''));
+  return { content: JSON.parse(decoded), sha: data.sha };
+}
+
+// Writes the given issues array to the GitHub data file (creates it if missing).
+// Requires a token — call githubCanWrite() first.
+async function githubPutFile(issuesArray, sha){
+  const c = getGithubConfig();
+  const url = `https://api.github.com/repos/${c.repo}/contents/${encodeURIComponent(c.path)}`;
+  const body = {
+    message: 'Update quality issue data',
+    content: utf8ToBase64(JSON.stringify(issuesArray, null, 2)),
+    branch: c.branch
+  };
+  if(sha) body.sha = sha;
+  const res = await fetch(url, {
+    method: 'PUT',
+    headers: {
+      'Authorization': `token ${c.token}`,
+      'Accept': 'application/vnd.github+json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(body)
+  });
+  if(!res.ok){
+    const errText = await res.text();
+    throw new Error('GitHub PUT failed: ' + res.status + ' ' + errText);
+  }
+  return await res.json();
+}
+
+let syncTimer = null;
+function queueBackendSync(){
+  if(!githubCanWrite()){
+    // Read-only viewer (no token): local edits (if any) stay on this device only.
+    if(githubHasRepo()) setSyncStatus('Read-only (no token) — changes stay on this device');
+    return;
+  }
+  setSyncStatus('Syncing…');
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(async ()=>{
+    try{
+      const { sha } = await githubGetFile(); // always write against the latest sha
+      await githubPutFile(issues, sha);
+      setSyncStatus('Synced ✓');
+    }catch(e){
+      console.error('GitHub sync failed', e);
+      setSyncStatus('Sync failed — will retry on next change');
+    }
+  }, 800);
+}
+
+function updateSyncUi(){
+  const hasRepo = githubHasRepo();
+  const canWrite = githubCanWrite();
+  document.getElementById('syncNowBtn').style.display = hasRepo ? 'inline-block' : 'none';
+  if(!hasRepo) setSyncStatus('Local only (not shared)');
+  else if(!canWrite) setSyncStatus('Read-only (viewing shared data)');
+  else setSyncStatus('');
+}
+
+// Normalizes an issue to the current data shape (photos[]/improvePhotos[] arrays)
+// while preserving any older single-photo fields, so no existing data is lost.
+function migrateIssue(issue){
+  if(!Array.isArray(issue.photos)){
+    issue.photos = issue.photo ? [issue.photo] : [];
+  }
+  if(!Array.isArray(issue.improvePhotos)){
+    issue.improvePhotos = issue.improvePhoto ? [issue.improvePhoto] : [];
+  }
+  if(!Array.isArray(issue.comments)) issue.comments = issue.comments || [];
+  if(typeof issue.label !== 'string') issue.label = issue.label || '';
+  return issue;
+}
+
+async function initData(){
+  updateSyncUi();
+  if(githubHasRepo()){
+    try{
+      setSyncStatus('Loading shared data…');
+      const { content } = await githubGetFile();
+      issues = (content || []).map(migrateIssue);
+      dbReady = true;
+      await idbSet('qc_issues', issues); // keep a local cache for offline viewing
+      setSyncStatus(githubCanWrite() ? 'Synced ✓' : 'Read-only (viewing shared data)');
+      refreshDeptFilter();
+      applyI18n();
+      return;
+    }catch(e){
+      console.error('GitHub fetch failed, showing last local cache instead', e);
+      setSyncStatus('Offline — showing last saved copy');
+      // fall through to local cache below
+    }
+  }
+  try{
+    let data = await idbGet('qc_issues');
+    if(!data){
+      // migrate any older data that was saved with the previous localStorage version
+      const old = localStorage.getItem('qc_issues');
+      if(old){
+        try{ data = JSON.parse(old); }catch(e){}
+      }
+    }
+    issues = (data || []).map(migrateIssue);
+    dbReady = true;
+    await idbSet('qc_issues', issues); // persist migrated shape immediately
+  }catch(e){
+    console.error('IndexedDB unavailable, falling back to localStorage', e);
+    try{ issues = JSON.parse(localStorage.getItem('qc_issues')||'[]').map(migrateIssue); }catch(e2){ issues = []; }
+  }
+  refreshDeptFilter();
+  applyI18n();
+}
+
+async function save(){
+  // Update the UI from in-memory data first, so the app never looks "stuck"
+  // even if persisting takes a moment or fails.
+  renderGrid();
+  renderNoticeList();
+  refreshDeptFilter();
+  try{
+    if(dbReady){ await idbSet('qc_issues', issues); }
+    else { localStorage.setItem('qc_issues', JSON.stringify(issues)); }
+  }catch(e){
+    console.error(e);
+    alert(I18N[lang].storageFull);
+  }
+  queueBackendSync();
+}
+
+// Resize + compress an image file to a data URL so it fits comfortably in localStorage.
+function compressImage(file, maxDim, quality){
+  return new Promise((resolve, reject)=>{
+    const reader = new FileReader();
+    reader.onerror = reject;
+    reader.onload = ()=>{
+      const img = new Image();
+      img.onerror = reject;
+      img.onload = ()=>{
+        let {width, height} = img;
+        if(width > maxDim || height > maxDim){
+          if(width > height){ height = Math.round(height * maxDim/width); width = maxDim; }
+          else { width = Math.round(width * maxDim/height); height = maxDim; }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width; canvas.height = height;
+        canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function uid(){ return 'q'+Date.now()+Math.random().toString(36).slice(2,7); }
+
+/* ---------- board rendering ---------- */
+const sevLabel = {low:'sevLow',med:'sevMed',high:'sevHigh'};
+const statusLabel = {open:'statusOpen',progress:'statusProgress',resolved:'statusResolved'};
+const statusClass = {open:'status-open',progress:'status-progress',resolved:'status-resolved'};
+const sevClass = {low:'sev-low',med:'sev-med',high:'sev-high'};
+
+function refreshDeptFilter(){
+  const sel = document.getElementById('filterDept');
+  const current = sel.value;
+  const depts = [...new Set(issues.map(i=>i.dept).filter(Boolean))];
+  sel.innerHTML = `<option value="" data-i18n="allDept">${I18N[lang].allDept}</option>` +
+    depts.map(d=>`<option value="${d}">${d}</option>`).join('');
+  sel.value = current;
+}
+
+function renderGrid(){
+  const status = document.getElementById('filterStatus').value;
+  const dept = document.getElementById('filterDept').value;
+  const q = document.getElementById('searchBox').value.toLowerCase();
+  const grid = document.getElementById('issueGrid');
+  const filtered = issues.filter(i=>{
+    if(status && i.status!==status) return false;
+    if(dept && i.dept!==dept) return false;
+    if(q && !((i.title||'').toLowerCase().includes(q) || (i.desc||'').toLowerCase().includes(q))) return false;
+    return true;
+  }).sort((a,b)=>b.createdAt-a.createdAt);
+
+  document.getElementById('emptyState').style.display = filtered.length? 'none':'block';
+  grid.innerHTML = filtered.map(i=>{
+    const thumb = (i.photos&&i.photos[0]) || (i.improvePhotos&&i.improvePhotos[0]);
+    return `
+    <div class="card" data-id="${i.id}">
+      <div class="thumb">${thumb?`<img src="${thumb}">`:'—'}</div>
+      <div class="card-body">
+        <div class="badge-row">
+          <span class="badge ${sevClass[i.severity]}">${I18N[lang][sevLabel[i.severity]]}</span>
+          <span class="badge ${statusClass[i.status]}">${I18N[lang][statusLabel[i.status]]}</span>
+        </div>
+        <h3>${escapeHtml(i.title||'')}</h3>
+        <div class="meta">${i.label? escapeHtml(i.label)+' · ':''}${escapeHtml(i.dept||'')} ${i.reporter? '· '+escapeHtml(i.reporter):''}</div>
+        <div class="desc">${escapeHtml((i.desc||'').slice(0,110))}</div>
+      </div>
+      <div class="card-actions">
+        <button class="view-btn" data-id="${i.id}">View</button>
+      </div>
+    </div>
+  `;}).join('');
+
+  grid.querySelectorAll('.view-btn, .card .thumb, .card h3').forEach(el=>{
+    el.addEventListener('click',(e)=>{
+      const card = e.target.closest('.card');
+      openDetail(card.dataset.id);
+    });
+  });
+}
+
+function escapeHtml(s){
+  return (s||'').replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+
+['filterStatus','filterDept','searchBox'].forEach(id=>{
+  document.getElementById(id).addEventListener('input', renderGrid);
+  document.getElementById(id).addEventListener('change', renderGrid);
+});
+
+/* ---------- new issue modal ---------- */
+const issueOverlay = document.getElementById('issueOverlay');
+let pendingPhotos = [null,null];
+let pendingImprovePhotos = [null,null];
+let editingId = null; // if set, saveIssue updates this issue instead of creating a new one
+let pendingDescTranslations = null;
+let pendingImproveTranslations = null;
+
+function resetPhotoSlot(inputId, previewId){
+  document.getElementById(inputId).value = '';
+  const prev = document.getElementById(previewId);
+  prev.src = '';
+  prev.style.display = 'none';
+  const btn = document.querySelector(`.removePhoto[data-group="${inputId.startsWith('fImprove')?'improve':'issue'}"][data-idx="${inputId.slice(-1)-1}"]`);
+  if(btn) btn.style.display = 'none';
+}
+
+function setPhotoSlot(previewId, dataUrl, group, idx){
+  const prev = document.getElementById(previewId);
+  if(dataUrl){ prev.src = dataUrl; prev.style.display = 'block'; } else { prev.style.display = 'none'; }
+  const btn = document.querySelector(`.removePhoto[data-group="${group}"][data-idx="${idx}"]`);
+  if(btn) btn.style.display = dataUrl ? 'block' : 'none';
+}
+
+document.getElementById('fLabelNA').addEventListener('change', (e)=>{
+  const labelInput = document.getElementById('fLabel');
+  if(e.target.checked){
+    labelInput.value = 'N/A';
+    labelInput.disabled = true;
+  } else {
+    labelInput.value = '';
+    labelInput.disabled = false;
+    labelInput.focus();
+  }
+});
+
+document.getElementById('newIssueBtn').addEventListener('click',()=>{
+  editingId = null;
+  ['fTitle','fLabel','fDept','fDesc','fImprove','fReporter'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('fSeverity').value='med';
+  document.getElementById('fStatus').value='open';
+  pendingPhotos[0]=null; pendingPhotos[1]=null;
+  pendingImprovePhotos[0]=null; pendingImprovePhotos[1]=null;
+  resetPhotoSlot('fPhoto1','fPhoto1Preview');
+  resetPhotoSlot('fPhoto2','fPhoto2Preview');
+  resetPhotoSlot('fImprovePhoto1','fImprovePhoto1Preview');
+  resetPhotoSlot('fImprovePhoto2','fImprovePhoto2Preview');
+  pendingDescTranslations = null;
+  pendingImproveTranslations = null;
+  document.getElementById('descTranslationBox').style.display='none';
+  document.getElementById('improveTranslationBox').style.display='none';
+  document.getElementById('fLabelNA').checked = false;
+  document.getElementById('fLabel').disabled = false;
+  issueOverlay.classList.add('active');
+});
+document.getElementById('cancelModal').addEventListener('click',()=>issueOverlay.classList.remove('active'));
+
+function wirePhotoInput(inputId, previewId, arr, idx, group){
+  document.getElementById(inputId).addEventListener('change', async e=>{
+    const file = e.target.files[0];
+    if(!file) return;
+    try{
+      arr[idx] = await compressImage(file, 900, 0.72);
+      setPhotoSlot(previewId, arr[idx], group, idx);
+    }catch(err){ console.error(err); }
+  });
+}
+wirePhotoInput('fPhoto1','fPhoto1Preview', pendingPhotos, 0, 'issue');
+wirePhotoInput('fPhoto2','fPhoto2Preview', pendingPhotos, 1, 'issue');
+wirePhotoInput('fImprovePhoto1','fImprovePhoto1Preview', pendingImprovePhotos, 0, 'improve');
+wirePhotoInput('fImprovePhoto2','fImprovePhoto2Preview', pendingImprovePhotos, 1, 'improve');
+
+document.querySelectorAll('.removePhoto').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const group = btn.dataset.group;
+    const idx = parseInt(btn.dataset.idx,10);
+    const arr = group==='issue' ? pendingPhotos : pendingImprovePhotos;
+    arr[idx] = null;
+    const inputId = group==='issue' ? 'fPhoto'+(idx+1) : 'fImprovePhoto'+(idx+1);
+    document.getElementById(inputId).value = '';
+    setPhotoSlot(inputId+'Preview', null, group, idx);
+  });
+});
+
+// Renders VI/ZH translations as editable textareas inside `boxEl`.
+// `translations` is mutated in place as the user edits, so callers holding
+// the same object reference (pendingDescTranslations, comment.translations, etc.)
+// automatically see the edits. `onEdit` fires (with the updated object) after each edit.
+function renderTranslationBox(boxEl, translations, onEdit){
+  boxEl.innerHTML = `
+    <div class="trans-row"><label>VI</label><textarea class="trans-input" data-lang="vi">${escapeHtml(translations.vi||'')}</textarea></div>
+    <div class="trans-row"><label>ZH</label><textarea class="trans-input" data-lang="zh">${escapeHtml(translations.zh||'')}</textarea></div>
+  `;
+  let debounceTimer = null;
+  boxEl.querySelectorAll('.trans-input').forEach(ta=>{
+    ta.addEventListener('input', ()=>{
+      translations[ta.dataset.lang] = ta.value;
+      if(onEdit){
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(()=>onEdit(translations), 500);
+      }
+    });
+  });
+  boxEl.style.display = 'block';
+}
+
+function wireFieldTranslate(btnId, fieldId, boxId, setter){
+  document.getElementById(btnId).addEventListener('click', async ()=>{
+    const btn = document.getElementById(btnId);
+    const box = document.getElementById(boxId);
+    const text = document.getElementById(fieldId).value.trim();
+    if(!text) return;
+    btn.disabled = true;
+    const prevLabel = btn.textContent;
+    btn.textContent = 'Translating…';
+    let result;
+    try{
+      const [vi, zh] = await Promise.all([
+        translateText(text, 'vi'),
+        translateText(text, 'zh-CN')
+      ]);
+      result = { vi, zh };
+      renderTranslationBox(box, result);
+    }catch(err){
+      console.error(err);
+      result = { vi:'', zh:'' };
+      renderTranslationBox(box, result);
+    }
+    setter(result);
+    btn.disabled = false;
+    btn.textContent = prevLabel;
+  });
+}
+wireFieldTranslate('translateDescBtn','fDesc','descTranslationBox', r=>{ pendingDescTranslations = r; });
+wireFieldTranslate('translateImproveBtn','fImprove','improveTranslationBox', r=>{ pendingImproveTranslations = r; });
+
+document.getElementById('saveIssue').addEventListener('click',()=>{
+  const title = document.getElementById('fTitle').value.trim();
+  if(!title){ alert(I18N[lang].titleRequired); document.getElementById('fTitle').focus(); return; }
+  const data = {
+    title,
+    label: document.getElementById('fLabel').value.trim(),
+    dept: document.getElementById('fDept').value.trim(),
+    severity: document.getElementById('fSeverity').value,
+    status: document.getElementById('fStatus').value,
+    desc: document.getElementById('fDesc').value.trim(),
+    improve: document.getElementById('fImprove').value.trim(),
+    reporter: document.getElementById('fReporter').value.trim(),
+    photos: pendingPhotos.filter(Boolean),
+    improvePhotos: pendingImprovePhotos.filter(Boolean),
+    descTranslations: pendingDescTranslations,
+    improveTranslations: pendingImproveTranslations
+  };
+  if(editingId){
+    const issue = issues.find(i=>i.id===editingId);
+    Object.assign(issue, data);
+  } else {
+    issues.push(Object.assign({ id: uid(), comments: [], createdAt: Date.now() }, data));
+  }
+  save();
+  issueOverlay.classList.remove('active');
+});
+
+/* ---------- detail modal ---------- */
+const detailOverlay = document.getElementById('detailOverlay');
+let currentDetailId = null;
+
+function openDetail(id){
+  const issue = issues.find(i=>i.id===id);
+  if(!issue) return;
+  currentDetailId = id;
+  document.getElementById('detailTitle').textContent = issue.title;
+  const beforeGal = document.getElementById('detailBeforeGallery');
+  beforeGal.innerHTML = (issue.photos&&issue.photos.length)
+    ? issue.photos.map(p=>`<img src="${p}">`).join('')
+    : `<span class="none">—</span>`;
+  const afterGal = document.getElementById('detailAfterGallery');
+  afterGal.innerHTML = (issue.improvePhotos&&issue.improvePhotos.length)
+    ? issue.improvePhotos.map(p=>`<img src="${p}">`).join('')
+    : `<span class="none">—</span>`;
+  document.getElementById('detailBadges').innerHTML =
+    `${issue.label? `<span class="badge" style="background:#1c2024;color:#fff">${escapeHtml(issue.label)}</span>` : ''}
+     <span class="badge ${sevClass[issue.severity]}">${I18N[lang][sevLabel[issue.severity]]}</span>
+     <span class="badge ${statusClass[issue.status]}">${I18N[lang][statusLabel[issue.status]]}</span>
+     <span class="badge" style="background:#eceae4;color:#4a5560">${escapeHtml(issue.dept||'')}</span>`;
+  document.getElementById('detailDesc').textContent = issue.desc||'';
+  document.getElementById('detailImprove').textContent = issue.improve||'';
+  renderComments(issue);
+  document.getElementById('fNewComment').value='';
+  detailOverlay.classList.add('active');
+}
+
+function renderComments(issue){
+  const el = document.getElementById('detailComments');
+  if(!issue.comments.length){ el.innerHTML = `<div style="font-size:12px;color:var(--muted)">${I18N[lang].noComments}</div>`; return; }
+  el.innerHTML = issue.comments.map((c,idx)=>{
+    let transHtml = '';
+    if(c.translations){
+      transHtml = `<div class="translations" data-idx="${idx}"></div>`;
+    } else {
+      transHtml = `<button class="translateBtn" data-idx="${idx}">Translate to VI / ZH</button>`;
+    }
+    return `
+    <div class="comment">
+      <div class="who">${escapeHtml(c.who||'')} · ${new Date(c.at).toLocaleString()}</div>
+      <div class="txt">${escapeHtml(c.text)}</div>
+      ${transHtml}
+    </div>
+  `;}).join('');
+
+  el.querySelectorAll('.translateBtn').forEach(btn=>{
+    btn.addEventListener('click', ()=>translateComment(issue, parseInt(btn.dataset.idx,10), btn));
+  });
+
+  // Fill in editable translation boxes for comments that already have translations
+  el.querySelectorAll('.translations[data-idx]').forEach(box=>{
+    const idx = parseInt(box.dataset.idx,10);
+    const comment = issue.comments[idx];
+    renderTranslationBox(box, comment.translations, ()=>{ save(); });
+  });
+}
+
+// Uses the free MyMemory translation API (no key needed) to translate a comment
+// into Vietnamese and Chinese, caches the result on the comment (editable afterwards), and re-renders.
+async function translateComment(issue, idx, btn){
+  const comment = issue.comments[idx];
+  if(!comment || comment.translations) return;
+  btn.disabled = true;
+  btn.textContent = 'Translating…';
+  try{
+    const [vi, zh] = await Promise.all([
+      translateText(comment.text, 'vi'),
+      translateText(comment.text, 'zh-CN')
+    ]);
+    comment.translations = { vi, zh };
+  }catch(err){
+    console.error(err);
+    comment.translations = { vi: '', zh: '' };
+  }
+  save();
+  renderComments(issue);
+}
+
+async function translateText(text, targetLang){
+  const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|${targetLang}`;
+  const res = await fetch(url);
+  const data = await res.json();
+  return (data && data.responseData && data.responseData.translatedText) || '(translation unavailable)';
+}
+
+document.getElementById('closeDetail').addEventListener('click',()=>detailOverlay.classList.remove('active'));
+
+document.getElementById('printDetailBtn').addEventListener('click',()=>{
+  const issue = issues.find(i=>i.id===currentDetailId);
+  if(issue) printSingleIssue(issue);
+});
+
+document.getElementById('addComment').addEventListener('click',()=>{
+  const text = document.getElementById('fNewComment').value.trim();
+  if(!text) return;
+  const issue = issues.find(i=>i.id===currentDetailId);
+  issue.comments.push({text, who: issue.reporter? '' : '', at: Date.now()});
+  document.getElementById('fNewComment').value='';
+  save();
+  renderComments(issue);
+});
+
+document.getElementById('editIssue').addEventListener('click',()=>{
+  const issue = issues.find(i=>i.id===currentDetailId);
+  if(!issue) return;
+  editingId = issue.id;
+  document.getElementById('fTitle').value = issue.title||'';
+  document.getElementById('fDept').value = issue.dept||'';
+  document.getElementById('fSeverity').value = issue.severity||'med';
+  document.getElementById('fStatus').value = issue.status||'open';
+  document.getElementById('fDesc').value = issue.desc||'';
+  document.getElementById('fImprove').value = issue.improve||'';
+  document.getElementById('fReporter').value = issue.reporter||'';
+  document.getElementById('fLabel').value = issue.label||'';
+  const isNA = (issue.label||'').trim().toUpperCase() === 'N/A';
+  document.getElementById('fLabelNA').checked = isNA;
+  document.getElementById('fLabel').disabled = isNA;
+
+  // Clone so edits made here don't mutate the saved issue unless "Save Issue" is clicked
+  pendingDescTranslations = issue.descTranslations ? {...issue.descTranslations} : null;
+  pendingImproveTranslations = issue.improveTranslations ? {...issue.improveTranslations} : null;
+  const descBox = document.getElementById('descTranslationBox');
+  if(pendingDescTranslations){ renderTranslationBox(descBox, pendingDescTranslations); }
+  else { descBox.style.display = 'none'; }
+  const improveBox = document.getElementById('improveTranslationBox');
+  if(pendingImproveTranslations){ renderTranslationBox(improveBox, pendingImproveTranslations); }
+  else { improveBox.style.display = 'none'; }
+
+  pendingPhotos[0] = (issue.photos&&issue.photos[0])||null;
+  pendingPhotos[1] = (issue.photos&&issue.photos[1])||null;
+  pendingImprovePhotos[0] = (issue.improvePhotos&&issue.improvePhotos[0])||null;
+  pendingImprovePhotos[1] = (issue.improvePhotos&&issue.improvePhotos[1])||null;
+
+  document.getElementById('fPhoto1').value=''; document.getElementById('fPhoto2').value='';
+  document.getElementById('fImprovePhoto1').value=''; document.getElementById('fImprovePhoto2').value='';
+  setPhotoSlot('fPhoto1Preview', pendingPhotos[0], 'issue', 0);
+  setPhotoSlot('fPhoto2Preview', pendingPhotos[1], 'issue', 1);
+  setPhotoSlot('fImprovePhoto1Preview', pendingImprovePhotos[0], 'improve', 0);
+  setPhotoSlot('fImprovePhoto2Preview', pendingImprovePhotos[1], 'improve', 1);
+
+  detailOverlay.classList.remove('active');
+  issueOverlay.classList.add('active');
+});
+
+document.getElementById('deleteIssue').addEventListener('click',()=>{
+  showConfirm(I18N[lang].confirmDelete, ()=>{
+    issues = issues.filter(i=>i.id!==currentDetailId);
+    save();
+    detailOverlay.classList.remove('active');
+  });
+});
+
+/* ---------- export / import ---------- */
+document.getElementById('exportBtn').addEventListener('click',()=>{
+  const blob = new Blob([JSON.stringify(issues,null,2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'quality-issues.json';
+  a.click();
+});
+document.getElementById('importBtn').addEventListener('click',()=>document.getElementById('importFile').click());
+document.getElementById('importFile').addEventListener('change', e=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    try{
+      const data = JSON.parse(reader.result);
+      if(Array.isArray(data)){ issues = data; save(); }
+    }catch(err){ alert('Invalid JSON file'); }
+  };
+  reader.readAsText(file);
+});
+
+/* ---------- notification / print ---------- */
+function renderNoticeList(){
+  const el = document.getElementById('noticeSelectList');
+  el.innerHTML = issues.slice().sort((a,b)=>b.createdAt-a.createdAt).map(i=>{
+    const thumb = (i.photos&&i.photos[0]) || (i.improvePhotos&&i.improvePhotos[0]);
+    return `
+    <li>
+      <input type="checkbox" class="noticeCheck" data-id="${i.id}">
+      ${thumb?`<img src="${thumb}">`:''}
+      <div style="flex:1">
+        <b style="font-size:13px">${escapeHtml(i.title)}</b>
+        <div style="font-size:11px;color:var(--muted)">${escapeHtml(i.dept||'')} · ${I18N[lang][statusLabel[i.status]]}</div>
+      </div>
+    </li>
+  `;}).join('');
+  el.querySelectorAll('.noticeCheck').forEach(cb=>cb.addEventListener('change', renderNoticeSheet));
+  renderNoticeSheet();
+}
+
+function renderNoticeSheet(){
+  const checked = [...document.querySelectorAll('.noticeCheck:checked')].map(c=>c.dataset.id);
+  const selected = issues.filter(i=>checked.includes(i.id));
+  document.getElementById('noticeDate').textContent = new Date().toLocaleDateString();
+  document.getElementById('noticeBody').innerHTML = selected.length ? selected.map(i=>`
+    <div class="notice-item">
+      <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0">
+        ${(i.photos||[]).map(p=>`<img src="${p}">`).join('')}
+        ${(i.improvePhotos||[]).map(p=>`<img src="${p}">`).join('')}
+      </div>
+      <div class="txt">
+        <b>${escapeHtml(i.title)}</b>
+        ${escapeHtml(i.dept||'')} · ${I18N[lang][sevLabel[i.severity]]} · ${I18N[lang][statusLabel[i.status]]}<br>
+        ${escapeHtml(i.desc||'')}
+        ${i.improve? `<br><i>${I18N[lang].fImprove}: ${escapeHtml(i.improve)}</i>`:''}
+      </div>
+    </div>
+  `).join('') : `<div style="padding:20px 0;color:var(--muted);font-size:13px">${I18N[lang].noticeHint}</div>`;
+}
+
+document.getElementById('printBtn').addEventListener('click',()=>window.print());
+
+/* ---------- single-issue A5 print ---------- */
+function buildSingleIssueHTML(issue){
+  const before = (issue.photos||[]).map(p=>`<img src="${p}">`).join('');
+  const after = (issue.improvePhotos||[]).map(p=>`<img src="${p}">`).join('');
+
+  let commentsBlock = '';
+  if(issue.comments && issue.comments.length){
+    const items = issue.comments.map(c=>`
+      <div class="print-comment">
+        <div class="pc-meta">${escapeHtml(c.who||'')} ${escapeHtml(c.who?'·':'')} ${new Date(c.at).toLocaleString()}</div>
+        <div class="pc-text">${escapeHtml(c.text)}</div>
+        ${c.translations ? `
+          <div class="pc-trans"><b>VI:</b> ${escapeHtml(c.translations.vi||'—')}</div>
+          <div class="pc-trans"><b>ZH:</b> ${escapeHtml(c.translations.zh||'—')}</div>
+        ` : ''}
+      </div>
+    `).join('');
+    commentsBlock = `
+      <div class="sec-label">Comments / Bình luận / 评论</div>
+      <div class="print-comments">${items}</div>
+    `;
+  }
+
+  return `
+    <div class="sheet-inner">
+      <div class="head-row">
+        <div class="mark">QC</div>
+        <div class="mark byc-mark">BYC</div>
+        <div class="stamp">Quality Issue Notice / Thông Báo Vấn Đề Chất Lượng / 质量问题通知</div>
+      </div>
+      <div class="content-row">
+        <div class="sheet-left">
+          <h2>${escapeHtml(issue.title||'')}</h2>
+          <div class="meta-line">${escapeHtml(issue.dept||'')} ${issue.reporter?'· Reported by '+escapeHtml(issue.reporter):''} · ${new Date(issue.createdAt||Date.now()).toLocaleDateString()}</div>
+          <div class="badge-row">
+            <span class="badge ${sevClass[issue.severity]}">${I18N.en[sevLabel[issue.severity]]}</span>
+            <span class="badge ${statusClass[issue.status]}">${I18N.en[statusLabel[issue.status]]}</span>
+          </div>
+          <div class="sec-label">Description of the problem / Mô tả vấn đề / 问题描述</div>
+          <div class="sec-text">${escapeHtml(issue.desc||'—')}</div>
+          ${issue.descTranslations? `
+            <div class="sec-text lang-tag">VI: ${escapeHtml(issue.descTranslations.vi||'—')}</div>
+            <div class="sec-text lang-tag">ZH: ${escapeHtml(issue.descTranslations.zh||'—')}</div>
+          ` : ''}
+          <div class="sec-label">Improvement / corrective action / Cải thiện, hành động khắc phục / 改善 / 纠正措施</div>
+          <div class="sec-text">${escapeHtml(issue.improve||'—')}</div>
+          ${issue.improveTranslations? `
+            <div class="sec-text lang-tag">VI: ${escapeHtml(issue.improveTranslations.vi||'—')}</div>
+            <div class="sec-text lang-tag">ZH: ${escapeHtml(issue.improveTranslations.zh||'—')}</div>
+          ` : ''}
+        </div>
+        <div class="sheet-right">
+          ${before? `<div class="photo-group"><div class="sec-label">Before / Trước / 之前</div><div class="gallery">${before}</div></div>` : ''}
+          ${after? `<div class="photo-group"><div class="sec-label">After / Sau / 之后</div><div class="gallery">${after}</div></div>` : ''}
+        </div>
+      </div>
+      ${commentsBlock}
+      <div class="sign-block">
+        <div class="sign-col"><div class="sign-line"></div>Reported by / Date · Người báo cáo / Ngày · 报告人 / 日期</div>
+        <div class="sign-col"><div class="sign-line"></div>Reviewed by / Date · Người kiểm tra / Ngày · 审核人 / 日期</div>
+        <div class="sign-col"><div class="sign-line"></div>Approved by / Date · Người phê duyệt / Ngày · 批准人 / 日期</div>
+      </div>
+    </div>
+  `;
+}
+
+// Builds the "QIBDDMMYY-FIRSTTWOWORDS" filename used as the suggested PDF name
+// when printing (browsers use document.title as the default Save-as-PDF filename).
+function buildPrintFilename(issue){
+  const d = new Date();
+  const dd = String(d.getDate()).padStart(2,'0');
+  const mm = String(d.getMonth()+1).padStart(2,'0');
+  const yy = String(d.getFullYear()).slice(-2);
+  const words = (issue.title||'').trim().split(/\s+/).slice(0,2).join('');
+  const wording = words.replace(/[^a-zA-Z0-9]/g,'').toUpperCase() || 'ISSUE';
+  const rawLabel = (issue.label||'').trim();
+  const isNA = rawLabel.toUpperCase() === 'N/A';
+  const label = isNA ? '' : rawLabel.replace(/[^a-zA-Z0-9]/g,'').toUpperCase();
+  const labelPart = label ? `${label}-` : '';
+  return `${labelPart}QIB${dd}${mm}${yy}-${wording}`;
+}
+
+function printSingleIssue(issue){
+  const sheet = document.getElementById('singlePrintSheet');
+  sheet.innerHTML = buildSingleIssueHTML(issue);
+
+  const scaleSelect = document.getElementById('printScaleSelect');
+  const scalePct = scaleSelect ? parseInt(scaleSelect.value, 10) : 100;
+  // CSS zoom reflows the whole sheet (text, images, spacing) at the chosen
+  // percentage — use it to pull 1-2 overflow lines back onto a single page.
+  sheet.style.zoom = (scalePct / 100);
+
+  const pageStyle = document.createElement('style');
+  pageStyle.id = 'a4PageStyle';
+  pageStyle.textContent = '@page{ size:A4 landscape; margin:12mm; }';
+  document.head.appendChild(pageStyle);
+
+  document.body.classList.add('print-single');
+
+  const originalTitle = document.title;
+  document.title = buildPrintFilename(issue);
+
+  const cleanup = ()=>{
+    document.body.classList.remove('print-single');
+    const st = document.getElementById('a4PageStyle');
+    if(st) st.remove();
+    document.title = originalTitle;
+    sheet.style.zoom = '';
+    window.removeEventListener('afterprint', cleanup);
+  };
+  window.addEventListener('afterprint', cleanup);
+
+  window.print();
+  // Safety net in case afterprint doesn't fire (some mobile browsers/webviews)
+  setTimeout(cleanup, 2000);
+}
+
+/* ---------- init ---------- */
+/* ---------- settings overlay wiring ---------- */
+const settingsOverlay = document.getElementById('settingsOverlay');
+document.getElementById('settingsBtn').addEventListener('click',()=>{
+  document.getElementById('ghRepoInput').value = localStorage.getItem('qc_gh_repo') || '';
+  document.getElementById('ghTokenInput').value = localStorage.getItem('qc_gh_token') || '';
+  document.getElementById('ghPathInput').value = localStorage.getItem('qc_gh_path') || '';
+  document.getElementById('ghBranchInput').value = localStorage.getItem('qc_gh_branch') || '';
+  settingsOverlay.classList.add('active');
+});
+document.getElementById('settingsCancelBtn').addEventListener('click',()=>{
+  settingsOverlay.classList.remove('active');
+});
+document.getElementById('settingsClearBtn').addEventListener('click',()=>{
+  setGithubConfig({ token:'', repo:'', path:'qc-data.json', branch:'main' });
+  settingsOverlay.classList.remove('active');
+  updateSyncUi();
+});
+document.getElementById('settingsSaveBtn').addEventListener('click', async ()=>{
+  const repo = document.getElementById('ghRepoInput').value.trim();
+  const token = document.getElementById('ghTokenInput').value.trim();
+  const path = document.getElementById('ghPathInput').value.trim() || 'qc-data.json';
+  const branch = document.getElementById('ghBranchInput').value.trim() || 'main';
+  setGithubConfig({ token, repo, path, branch });
+  settingsOverlay.classList.remove('active');
+  updateSyncUi();
+  if(!repo) return;
+
+  if(!token){
+    // Read-only viewer: just pull the shared data, no push logic needed.
+    await initData();
+    return;
+  }
+
+  setSyncStatus('Checking shared data…');
+  try{
+    const { content, sha } = await githubGetFile();
+    const remoteIssues = content || [];
+    if(remoteIssues.length===0 && issues.length>0){
+      // The GitHub file is empty/missing, but this device already has local
+      // issues — push them up as the initial shared copy instead of pulling
+      // empty data over them (which would otherwise wipe out this device's entries).
+      showConfirm(
+        `No shared data found yet on GitHub. Upload the ${issues.length} issue(s) on this device now?`,
+        async ()=>{
+          setSyncStatus('Uploading…');
+          try{
+            await githubPutFile(issues, sha);
+            dbReady = true;
+            await idbSet('qc_issues', issues);
+            setSyncStatus('Synced ✓');
+          }catch(e){
+            console.error(e);
+            setSyncStatus('Upload failed');
+          }
+        }
+      );
+    } else {
+      // GitHub already has shared data (or both are empty) — pull it as the source of truth
+      await initData();
+    }
+  }catch(e){
+    console.error('Could not reach GitHub', e);
+    setSyncStatus('Could not reach GitHub — check token/repo');
+  }
+});
+document.getElementById('syncNowBtn').addEventListener('click', async ()=>{
+  setSyncStatus('Refreshing…');
+  await initData();
+});
+
+initData();
+</script>
+</body>
+</html>
